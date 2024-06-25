@@ -32,7 +32,7 @@ import com.dimadyuk.newsapp.ui.theme.NewsAppTheme
 
 
 @Composable
-fun TopNews(navController: NavController) {
+fun TopNewsScreen(navController: NavController) {
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -102,7 +102,7 @@ fun TopNewsItem(
 @Composable
 fun TopNewsPreview() {
     NewsAppTheme {
-        TopNews(rememberNavController())
+        TopNewsScreen(rememberNavController())
     }
 }
 
