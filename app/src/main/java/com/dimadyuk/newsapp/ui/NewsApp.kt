@@ -33,6 +33,7 @@ fun Navigation() {
         ) { navBackStackEntry ->
             navBackStackEntry.arguments?.getInt("newsId")?.let { newsId ->
                 DetailScreen(
+                    navController = navController,
                     scrollState = scrollState,
                     newsData = MockData.getNews(newsId)
                 )

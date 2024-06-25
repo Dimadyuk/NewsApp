@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.dimadyuk.newsapp.MockData
+import com.dimadyuk.newsapp.MockData.getTimeAgo
 import com.dimadyuk.newsapp.R
 import com.dimadyuk.newsapp.model.NewsData
 import com.dimadyuk.newsapp.ui.theme.NewsAppTheme
@@ -79,11 +80,13 @@ fun TopNewsItem(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.SpaceBetween
         ) {
-            Text(
-                text = newsData.publishedAt,
-                color = Color.White,
-                fontWeight = FontWeight.SemiBold
-            )
+            MockData.stringToDate(newsData.publishedAt)?.let {
+                Text(
+                    text = it.getTimeAgo(),
+                    color = Color.White,
+                    fontWeight = FontWeight.SemiBold
+                )
+            }
             Spacer(modifier = Modifier.weight(1f))
             Text(
                 text = newsData.title,
