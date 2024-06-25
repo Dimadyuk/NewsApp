@@ -1,6 +1,5 @@
 package com.dimadyuk.newsapp.ui.screen
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -23,10 +22,11 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -35,12 +35,15 @@ import androidx.navigation.compose.rememberNavController
 import com.dimadyuk.newsapp.MockData
 import com.dimadyuk.newsapp.MockData.getTimeAgo
 import com.dimadyuk.newsapp.R
-import com.dimadyuk.newsapp.model.NewsData
+import com.dimadyuk.newsapp.model.TopNewsArticle
 import com.dimadyuk.newsapp.ui.theme.NewsAppTheme
+import com.skydoves.landscapist.coil.CoilImage
 
 @Composable
 fun DetailScreen(
-    navController: NavController, newsData: NewsData, scrollState: ScrollState
+    navController: NavController,
+    article: TopNewsArticle,
+    scrollState: ScrollState
 ) {
 
     Scaffold(
@@ -58,11 +61,11 @@ fun DetailScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(text = "Detail screen", fontWeight = FontWeight.SemiBold)
-            Image(
-                modifier = Modifier.fillMaxWidth(),
-                painter = painterResource(id = newsData.imageUrl),
-                contentDescription = null,
-                contentScale = ContentScale.Crop
+            CoilImage(
+                imageModel = article.urlToImage,
+                contentScale = ContentScale.Crop,
+                error = ImageBitmap.imageResource(id = R.drawable.news),
+                placeHolder = ImageBitmap.imageResource(id = R.drawable.news),
             )
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -70,20 +73,26 @@ fun DetailScreen(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 InfoWithIcon(
-                    info = newsData.author, icon = Icons.Outlined.Edit
+                    info = article.author.orEmpty(), icon = Icons.Outlined.Edit
                 )
-                MockData.stringToDate(newsData.publishedAt)?.let {
+                MockData.stringToDate(article.publishedAt.orEmpty())?.let {
                     InfoWithIcon(
                         info = it.getTimeAgo(), icon = Icons.Outlined.DateRange
                     )
                 }
             }
-            Text(
-                modifier = Modifier.padding(8.dp), text = newsData.title, fontWeight = FontWeight.Bold
-            )
-            Text(
-                text = newsData.description
-            )
+            article.title?.let {
+                Text(
+                    modifier = Modifier.padding(8.dp),
+                    text = it,
+                    fontWeight = FontWeight.Bold
+                )
+            }
+            article.description?.let {
+                Text(
+                    text = it
+                )
+            }
         }
     }
 }
@@ -127,12 +136,15 @@ fun DetailScreenPreview() {
     NewsAppTheme {
         DetailScreen(
             navController = rememberNavController(),
-            newsData = NewsData(
-                id = 1,
-                author = "author",
-                title = "title",
-                description = "description",
-                publishedAt = "publishedAt"
+            article = TopNewsArticle(
+                source = null,
+                author = "Author",
+                title = "Title",
+                description = "Description",
+                url = "Url",
+                urlToImage = "UrlToImage",
+                publishedAt = "PublishedAt",
+                content = "Content"
             ),
             scrollState = rememberScrollState(),
         )

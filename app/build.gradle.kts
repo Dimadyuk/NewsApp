@@ -58,6 +58,13 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.androidx.material3.navigation)
     implementation(libs.androidx.material3.icons)
+
+    implementation(libs.retrofit)
+    implementation(libs.moshi)
+    implementation(libs.moshi.converter)
+
+    implementation(libs.coil)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

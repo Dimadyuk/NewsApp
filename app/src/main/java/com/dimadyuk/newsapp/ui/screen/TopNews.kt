@@ -1,6 +1,5 @@
 package com.dimadyuk.newsapp.ui.screen
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -17,8 +16,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -27,24 +27,27 @@ import androidx.navigation.compose.rememberNavController
 import com.dimadyuk.newsapp.MockData
 import com.dimadyuk.newsapp.MockData.getTimeAgo
 import com.dimadyuk.newsapp.R
-import com.dimadyuk.newsapp.model.NewsData
+import com.dimadyuk.newsapp.model.TopNewsArticle
 import com.dimadyuk.newsapp.ui.theme.NewsAppTheme
+import com.skydoves.landscapist.coil.CoilImage
 
 
 @Composable
-fun TopNewsScreen(navController: NavController) {
+fun TopNewsScreen(
+    navController: NavController,
+    articles: List<TopNewsArticle>
+) {
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(text = "Top News", fontWeight = FontWeight.SemiBold)
-        val news = MockData.topNewsList
         LazyColumn {
-            items(news.size) { index ->
+            items(articles.size) { index ->
                 TopNewsItem(
-                    newsData = news[index],
+                    article = articles[index],
                     onNewsClick = {
-                        navController.navigate("DetailScreen/${it.id}")
+                        navController.navigate("DetailScreen/$index")
                     }
                 )
             }
@@ -54,8 +57,8 @@ fun TopNewsScreen(navController: NavController) {
 
 @Composable
 fun TopNewsItem(
-    newsData: NewsData,
-    onNewsClick: (NewsData) -> Unit = {}
+    article: TopNewsArticle,
+    onNewsClick: () -> Unit = {}
 ) {
     Box(
         modifier = Modifier
@@ -63,15 +66,14 @@ fun TopNewsItem(
             .height(200.dp)
             .padding(8.dp)
             .clickable {
-                onNewsClick(newsData)
+                onNewsClick()
             }
     ) {
-        Image(
-            modifier = Modifier
-                .fillMaxSize(),
-            painter = painterResource(id = newsData.imageUrl),
-            contentDescription = null,
-            contentScale = ContentScale.Crop
+        CoilImage(
+            imageModel = article.urlToImage,
+            contentScale = ContentScale.Crop,
+            error = ImageBitmap.imageResource(id = R.drawable.news),
+            placeHolder = ImageBitmap.imageResource(id = R.drawable.news),
         )
         Column(
             modifier = Modifier
@@ -80,7 +82,7 @@ fun TopNewsItem(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.SpaceBetween
         ) {
-            MockData.stringToDate(newsData.publishedAt)?.let {
+            MockData.stringToDate(article.publishedAt.orEmpty())?.let {
                 Text(
                     text = it.getTimeAgo(),
                     color = Color.White,
@@ -89,7 +91,7 @@ fun TopNewsItem(
             }
             Spacer(modifier = Modifier.weight(1f))
             Text(
-                text = newsData.title,
+                text = article.title.orEmpty(),
                 color = Color.White,
                 fontWeight = FontWeight.SemiBold
             )
@@ -102,7 +104,7 @@ fun TopNewsItem(
 @Composable
 fun TopNewsPreview() {
     NewsAppTheme {
-        TopNewsScreen(rememberNavController())
+        TopNewsScreen(rememberNavController(), listOf())
     }
 }
 
@@ -111,13 +113,15 @@ fun TopNewsPreview() {
 fun TopNewsItemPreview() {
     NewsAppTheme {
         TopNewsItem(
-            newsData = NewsData(
-                id = 1,
-                author = "John Doe",
-                imageUrl = R.drawable.news,
-                title = "Title 1",
-                description = "Description 1",
-                publishedAt = "2021-10-01"
+            article = TopNewsArticle(
+                source = null,
+                author = "author",
+                title = "title",
+                description = "description",
+                url = "url",
+                urlToImage = "urlToImage",
+                publishedAt = "publishedAt",
+                content = "content"
             )
         )
     }
