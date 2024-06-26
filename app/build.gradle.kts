@@ -60,6 +60,7 @@ dependencies {
     implementation(libs.androidx.material3.icons)
 
     implementation(libs.retrofit)
+    implementation(libs.interceptor)
     implementation(libs.moshi)
     implementation(libs.moshi.converter)
 

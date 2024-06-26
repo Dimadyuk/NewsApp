@@ -12,6 +12,7 @@ navigation = "2.7.7"
 retrofit = "2.9.0"
 moshi = "1.14.0"
 coil = "1.4.1"
+interceptor = "4.7.2"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -32,6 +33,7 @@ androidx-material3-navigation = { group = "androidx.navigation", name = "navigat
 androidx-material3-icons = { group = "androidx.compose.material", name = "material-icons-extended" }
 
 retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
+interceptor = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "interceptor" }
 moshi-converter = { group = "com.squareup.retrofit2", name = "converter-moshi", version.ref = "retrofit" }
 moshi = { group = "com.squareup.moshi", name = "moshi-kotlin", version.ref = "moshi" }
 
