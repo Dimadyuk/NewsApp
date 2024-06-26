@@ -107,6 +107,8 @@ fun NavGraphBuilder.bottomNavigation(
         )
     }
     composable(BottomMenuScreen.Sources.route) {
-        SourcesScreen()
+        SourcesScreen(
+            newsManager = newsManager
+        )
     }
 }
