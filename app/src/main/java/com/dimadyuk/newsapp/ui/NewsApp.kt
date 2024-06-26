@@ -2,9 +2,11 @@ package com.dimadyuk.newsapp.ui
 
 import android.util.Log
 import androidx.compose.foundation.ScrollState
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
@@ -39,8 +41,9 @@ fun MainScreen(
 ) {
     Scaffold(bottomBar = {
         BottomMenu(navController = navController)
-    }) {
+    }) { padding ->
         Navigation(
+            modifier = Modifier.padding(padding),
             navController = navController,
             scrollState = scrollState
         )
@@ -49,6 +52,7 @@ fun MainScreen(
 
 @Composable
 fun Navigation(
+    modifier: Modifier = Modifier,
     navController: NavHostController,
     scrollState: ScrollState,
     newsManager: NewsManager = NewsManager()
@@ -57,12 +61,14 @@ fun Navigation(
     Log.d("articles", "$articles")
     articles?.let {
         NavHost(
+            modifier = modifier,
             navController = navController,
             startDestination = BottomMenuScreen.TopNews.route
         ) {
             bottomNavigation(
                 navController = navController,
-                articles = articles
+                articles = articles,
+                newsManager = newsManager
             )
             composable(
                 "DetailScreen/{index}",
@@ -82,14 +88,23 @@ fun Navigation(
 
 fun NavGraphBuilder.bottomNavigation(
     navController: NavController,
-    articles: List<TopNewsArticle>
+    articles: List<TopNewsArticle>,
+    newsManager: NewsManager,
 ) {
     composable(BottomMenuScreen.TopNews.route) {
         TopNewsScreen(navController = navController, articles)
     }
 
     composable(BottomMenuScreen.Categories.route) {
-        CategoriesScreen()
+        newsManager.onSelectedCategoryChanged("business")
+        newsManager.getArticlesByCategory("business")
+        CategoriesScreen(
+            onFetchCategory = {
+                newsManager.onSelectedCategoryChanged(it)
+                newsManager.getArticlesByCategory(it)
+            },
+            newsManager = newsManager
+        )
     }
     composable(BottomMenuScreen.Sources.route) {
         SourcesScreen()

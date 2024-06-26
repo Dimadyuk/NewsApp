@@ -73,11 +73,15 @@ fun DetailScreen(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 InfoWithIcon(
-                    info = article.author.orEmpty(), icon = Icons.Outlined.Edit
+                    modifier = Modifier.weight(1f),
+                    info = article.author.orEmpty(),
+                    icon = Icons.Outlined.Edit
                 )
                 MockData.stringToDate(article.publishedAt.orEmpty())?.let {
                     InfoWithIcon(
-                        info = it.getTimeAgo(), icon = Icons.Outlined.DateRange
+                        modifier = Modifier,
+                        info = it.getTimeAgo(),
+                        icon = Icons.Outlined.DateRange
                     )
                 }
             }
@@ -117,8 +121,13 @@ fun DetailsTopAppBar(onBackPressed: () -> Unit) {
 }
 
 @Composable
-fun InfoWithIcon(info: String, icon: ImageVector) {
+fun InfoWithIcon(
+    info: String,
+    icon: ImageVector,
+    modifier: Modifier
+) {
     Row(
+        modifier = modifier,
         verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(
@@ -127,7 +136,10 @@ fun InfoWithIcon(info: String, icon: ImageVector) {
             contentDescription = null,
             tint = colorResource(id = R.color.purple_500)
         )
-        Text(text = info)
+        Text(
+            modifier = Modifier,
+            text = info
+        )
     }
 }
 @Preview(showBackground = true)
