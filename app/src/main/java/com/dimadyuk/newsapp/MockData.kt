@@ -1,6 +1,6 @@
 package com.dimadyuk.newsapp
 
-import com.dimadyuk.newsapp.model.NewsData
+import com.dimadyuk.newsapp.data.model.NewsData
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
@@ -198,9 +198,13 @@ object MockData {
     }
 
     fun stringToDate(publishedAt: String): Date? {
-        return SimpleDateFormat(
-            "yyyy-MM-dd'T'HH:mm:ss'Z'",
-            Locale.ENGLISH
-        ).parse(publishedAt)
+        return try {
+            SimpleDateFormat(
+                "yyyy-MM-dd'T'HH:mm:ss'Z'",
+                Locale.ENGLISH
+            ).parse(publishedAt)
+        } catch (e: Exception) {
+            null
+        }
     }
 }

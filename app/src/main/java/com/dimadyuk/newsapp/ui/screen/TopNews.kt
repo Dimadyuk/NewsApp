@@ -27,7 +27,7 @@ import androidx.navigation.compose.rememberNavController
 import com.dimadyuk.newsapp.MockData
 import com.dimadyuk.newsapp.MockData.getTimeAgo
 import com.dimadyuk.newsapp.R
-import com.dimadyuk.newsapp.model.TopNewsArticle
+import com.dimadyuk.newsapp.data.model.TopNewsArticle
 import com.dimadyuk.newsapp.ui.theme.NewsAppTheme
 import com.skydoves.landscapist.coil.CoilImage
 

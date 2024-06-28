@@ -1,4 +1,4 @@
-package com.dimadyuk.newsapp.model
+package com.dimadyuk.newsapp.data.model
 
 enum class ArticleCategory(
     val categoryName: String
@@ -16,6 +16,6 @@ fun getAllArticleCategories(): List<ArticleCategory> {
     return ArticleCategory.entries
 }
 
-fun getArticleCategories(category: String): ArticleCategory? {
+fun getArticleCategory(category: String): ArticleCategory? {
     return ArticleCategory.entries.find { it.categoryName == category }
 }

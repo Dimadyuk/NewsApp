@@ -1,4 +1,4 @@
-package com.dimadyuk.newsapp.model
+package com.dimadyuk.newsapp.data.model
 
 import com.dimadyuk.newsapp.R
 

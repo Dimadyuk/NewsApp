@@ -16,6 +16,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
@@ -28,17 +29,18 @@ import androidx.compose.ui.unit.dp
 import com.dimadyuk.newsapp.MockData
 import com.dimadyuk.newsapp.MockData.getTimeAgo
 import com.dimadyuk.newsapp.R
-import com.dimadyuk.newsapp.model.TopNewsArticle
-import com.dimadyuk.newsapp.model.getAllArticleCategories
-import com.dimadyuk.newsapp.network.NewsManager
+import com.dimadyuk.newsapp.data.model.TopNewsArticle
+import com.dimadyuk.newsapp.data.model.getAllArticleCategories
+import com.dimadyuk.newsapp.ui.MainViewModel
 import com.skydoves.landscapist.coil.CoilImage
 
 @Composable
 fun CategoriesScreen(
     onFetchCategory: (String) -> Unit = {},
-    newsManager: NewsManager,
+    viewModel: MainViewModel
 ) {
     val tabsItems = getAllArticleCategories()
+    val selectedCategory = viewModel.selectedCategory.collectAsState().value
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -49,13 +51,13 @@ fun CategoriesScreen(
                 val category = tabsItems[it]
                 CategoryTab(
                     category = category.categoryName,
-                    isSelected = newsManager.selectedCategory.value == category,
+                    isSelected = selectedCategory == category,
                     onFetchCategory = onFetchCategory
                 )
             }
         }
         ArticleContent(
-            articles = newsManager.getArticleByCategory.value.articles ?: emptyList()
+            articles = viewModel.getArticleByCategory.value.articles ?: emptyList()
         )
 
     }

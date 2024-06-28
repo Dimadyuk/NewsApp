@@ -2,10 +2,12 @@ package com.dimadyuk.newsapp.ui
 
 import android.util.Log
 import androidx.compose.foundation.ScrollState
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
@@ -17,58 +19,59 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.dimadyuk.newsapp.BottomMenuScreen
 import com.dimadyuk.newsapp.components.BottomMenu
-import com.dimadyuk.newsapp.model.TopNewsArticle
-import com.dimadyuk.newsapp.network.NewsManager
+import com.dimadyuk.newsapp.data.model.TopNewsArticle
 import com.dimadyuk.newsapp.ui.screen.CategoriesScreen
 import com.dimadyuk.newsapp.ui.screen.DetailScreen
 import com.dimadyuk.newsapp.ui.screen.SourcesScreen
 import com.dimadyuk.newsapp.ui.screen.TopNewsScreen
 
 @Composable
-fun NewsApp() {
+fun NewsApp(
+    viewModel: MainViewModel
+) {
     val scrollState = rememberScrollState()
     val navController = rememberNavController()
+
     MainScreen(
         navController = navController,
-        scrollState = scrollState
+        scrollState = scrollState,
+        viewModel = viewModel,
     )
 }
 
 @Composable
 fun MainScreen(
-    navController: NavHostController,
-    scrollState: ScrollState
+    navController: NavHostController, scrollState: ScrollState, viewModel: MainViewModel
 ) {
     Scaffold(bottomBar = {
         BottomMenu(navController = navController)
     }) { padding ->
         Navigation(
-            modifier = Modifier.padding(padding),
+            paddingValues = padding,
             navController = navController,
-            scrollState = scrollState
+            scrollState = scrollState,
+            viewModel = viewModel,
         )
     }
 }
 
 @Composable
 fun Navigation(
-    modifier: Modifier = Modifier,
+    paddingValues: PaddingValues,
     navController: NavHostController,
-    scrollState: ScrollState,
-    newsManager: NewsManager = NewsManager()
+    scrollState: ScrollState, viewModel: MainViewModel
 ) {
-    val articles = newsManager.newsResponse.value.articles
+    val articles = viewModel.newsResponse.collectAsState().value.articles ?: emptyList()
     Log.d("articles", "$articles")
-    articles?.let {
-        NavHost(
-            modifier = modifier,
+
+    NavHost(
+        modifier = Modifier.padding(paddingValues),
             navController = navController,
             startDestination = BottomMenuScreen.TopNews.route
         ) {
             bottomNavigation(
                 navController = navController,
-                articles = articles,
-                newsManager = newsManager
+                articles = articles, viewModel = viewModel
             )
             composable(
                 "DetailScreen/{index}",
@@ -82,33 +85,30 @@ fun Navigation(
                     )
                 }
             }
-        }
     }
 }
 
 fun NavGraphBuilder.bottomNavigation(
     navController: NavController,
     articles: List<TopNewsArticle>,
-    newsManager: NewsManager,
+    viewModel: MainViewModel,
 ) {
     composable(BottomMenuScreen.TopNews.route) {
+        viewModel.getTopArticles()
         TopNewsScreen(navController = navController, articles)
     }
 
     composable(BottomMenuScreen.Categories.route) {
-        newsManager.onSelectedCategoryChanged("business")
-        newsManager.getArticlesByCategory("business")
         CategoriesScreen(
             onFetchCategory = {
-                newsManager.onSelectedCategoryChanged(it)
-                newsManager.getArticlesByCategory(it)
-            },
-            newsManager = newsManager
+                viewModel.onSelectedCategoryChanged(it)
+                viewModel.getArticlesByCategory(it)
+            }, viewModel = viewModel
         )
     }
     composable(BottomMenuScreen.Sources.route) {
         SourcesScreen(
-            newsManager = newsManager
+            viewModel = viewModel
         )
     }
 }

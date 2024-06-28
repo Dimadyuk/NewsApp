@@ -1,4 +1,4 @@
-package com.dimadyuk.newsapp.model
+package com.dimadyuk.newsapp.data.model
 
 data class Source(
     val id: String? = null,

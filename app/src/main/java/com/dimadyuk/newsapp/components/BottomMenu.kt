@@ -7,13 +7,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.res.colorResource
-import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.dimadyuk.newsapp.BottomMenuScreen
 import com.dimadyuk.newsapp.R
 
 @Composable
-fun BottomMenu(navController: NavController) {
+fun BottomMenu(navController: NavHostController) {
     val menuItems = listOf(
         BottomMenuScreen.TopNews,
         BottomMenuScreen.Categories,
