@@ -2,6 +2,7 @@ package com.dimadyuk.newsapp.ui.screen
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -101,16 +102,25 @@ fun SourcesScreen(
     ) { padding ->
         viewModel.getArticlesBySources()
         val articles = viewModel.getArticleBySource.collectAsState().value
-        SourceContent(articles = articles.articles ?: emptyList())
+        SourceContent(
+            articles = articles.articles ?: emptyList(),
+            paddingValue = padding
+        )
     }
 }
 
 @Composable
-fun SourceContent(articles: List<TopNewsArticle>) {
+fun SourceContent(
+    articles: List<TopNewsArticle>,
+    paddingValue: PaddingValues
+) {
 
     val uriHandler = LocalUriHandler.current
 
-    LazyColumn {
+    LazyColumn(
+        modifier = Modifier.padding(paddingValue),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
         items(articles.size) { index ->
             val article = articles[index]
             val annotatedString = buildAnnotatedString {

@@ -19,4 +19,8 @@ class NewsManager(
     suspend fun getArticlesBySource(source: String): TopNewsResponse = withContext(Dispatchers.IO) {
         service.getArticlesBySources(source = source)
     }
+
+    suspend fun getArticlesByQuery(query: String): TopNewsResponse = withContext(Dispatchers.IO) {
+        service.getArticlesByQuery(query = query)
+    }
 }

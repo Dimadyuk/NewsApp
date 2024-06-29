@@ -20,4 +20,9 @@ interface NewsService {
     suspend fun getArticlesBySources(
         @Query("sources") source: String,
     ): TopNewsResponse
+
+    @GET("everything")
+    suspend fun getArticlesByQuery(
+        @Query("q") query: String,
+    ): TopNewsResponse
 }

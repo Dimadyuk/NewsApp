@@ -63,6 +63,8 @@ fun Navigation(
 ) {
     val articles = viewModel.newsResponse.collectAsState().value.articles ?: emptyList()
     Log.d("articles", "$articles")
+    val searchList = viewModel.searchedNewsResponse.collectAsState().value?.articles ?: emptyList()
+    val resultList = searchList.ifEmpty { articles }
 
     NavHost(
         modifier = Modifier.padding(paddingValues),
@@ -71,7 +73,7 @@ fun Navigation(
         ) {
             bottomNavigation(
                 navController = navController,
-                articles = articles, viewModel = viewModel
+                articles = resultList, viewModel = viewModel
             )
             composable(
                 "DetailScreen/{index}",
@@ -81,7 +83,7 @@ fun Navigation(
                     DetailScreen(
                         navController = navController,
                         scrollState = scrollState,
-                        article = articles[index]
+                        article = resultList[index]
                     )
                 }
             }
@@ -93,9 +95,14 @@ fun NavGraphBuilder.bottomNavigation(
     articles: List<TopNewsArticle>,
     viewModel: MainViewModel,
 ) {
+
     composable(BottomMenuScreen.TopNews.route) {
         viewModel.getTopArticles()
-        TopNewsScreen(navController = navController, articles)
+        TopNewsScreen(
+            navController = navController,
+            articles = articles,
+            viewModel = viewModel,
+        )
     }
 
     composable(BottomMenuScreen.Categories.route) {

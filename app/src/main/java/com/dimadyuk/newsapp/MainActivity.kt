@@ -16,6 +16,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import com.dimadyuk.newsapp.components.ErrorUI
+import com.dimadyuk.newsapp.components.LoadingUI
 import com.dimadyuk.newsapp.ui.MainViewModel
 import com.dimadyuk.newsapp.ui.NewsApp
 import com.dimadyuk.newsapp.ui.theme.NewsAppTheme
@@ -40,7 +42,10 @@ class MainActivity : ComponentActivity() {
                             viewModel = viewModel
                         )
                         if (viewModel.isLoading.collectAsState().value) {
-                            CircularProgressIndicator()
+                            LoadingUI()
+                        }
+                        if (viewModel.isError.collectAsState().value) {
+                            ErrorUI()
                         }
                     }
                 }

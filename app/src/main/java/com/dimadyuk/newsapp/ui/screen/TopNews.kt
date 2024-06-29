@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -23,11 +24,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.dimadyuk.newsapp.MockData
 import com.dimadyuk.newsapp.MockData.getTimeAgo
 import com.dimadyuk.newsapp.R
+import com.dimadyuk.newsapp.components.SearchBar
 import com.dimadyuk.newsapp.data.model.TopNewsArticle
+import com.dimadyuk.newsapp.ui.MainViewModel
 import com.dimadyuk.newsapp.ui.theme.NewsAppTheme
 import com.skydoves.landscapist.coil.CoilImage
 
@@ -35,13 +37,23 @@ import com.skydoves.landscapist.coil.CoilImage
 @Composable
 fun TopNewsScreen(
     navController: NavController,
-    articles: List<TopNewsArticle>
+    articles: List<TopNewsArticle>,
+    viewModel: MainViewModel,
 ) {
+    val query = viewModel.query.collectAsState()
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(text = "Top News", fontWeight = FontWeight.SemiBold)
+        SearchBar(query = query,
+            onSearchClick = {
+                viewModel.getArticlesByQuery()
+            },
+            onSearchChanged = {
+                viewModel.onQueryChanged(it)
+            }
+        )
+
         LazyColumn {
             items(articles.size) { index ->
                 TopNewsItem(
@@ -96,15 +108,6 @@ fun TopNewsItem(
                 fontWeight = FontWeight.SemiBold
             )
         }
-    }
-
-}
-
-@Preview(showBackground = true)
-@Composable
-fun TopNewsPreview() {
-    NewsAppTheme {
-        TopNewsScreen(rememberNavController(), listOf())
     }
 }
 
